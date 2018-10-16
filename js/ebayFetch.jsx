@@ -37,7 +37,7 @@ function prepareUrl(params) {
     return `http://svcs.ebay.com/services/search/FindingService/v1
     ?OPERATION-NAME=findCompletedItems
     &SERVICE-VERSION=1.0.0
-    &SECURITY-APPNAME=xyz
+    &SECURITY-APPNAME=MichalKr-Test-PRD-e5d80d3bd-41bbd681
     &GLOBAL-ID=EBAY-DE
     &RESPONSE-DATA-FORMAT=JSON
     &callback=_cb_findCompletedItems

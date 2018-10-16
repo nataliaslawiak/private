@@ -1,0 +1,35 @@
+{
+  "name": "natalia",
+  "version": "1.0.0",
+  "description": "## Zadanie rozwiązywane z wykładowcą",
+  "main": "webpack.config.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nataliaslawiak/private.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "./node_modules/.bin/webpack-dev-server --hot"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "chart.js": "^2.7.2",
+    "moment": "^2.22.2",
+    "react": "^16.0.0",
+    "react-datepicker": "^1.5.0",
+    "react-dom": "^16.0.0",
+    "react-router-dom": "^4.2.2",
+    "sass": "^1.7.0",
+    "statistical-methods": "^1.0.4",
+    "webpack": "^4.18.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.4"
+  }
+}
