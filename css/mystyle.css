@@ -1,0 +1,304 @@
+* {
+    font-family: 'Quicksand', 'Arial Narrow', Arial, sans-serif;
+    margin: 0;
+    padding: 0; 
+    box-sizing: border-box;
+}
+
+.loading {
+  position: absolute;
+  top: 70%;
+  left: 500px;
+  transform: translateX(-50%) translateY(-50%);
+}
+.loading-bar {
+  display: inline-block;
+  width: 10px;
+  height: 40px;
+  margin-right: 5px;
+  border-radius: 4px;
+  animation: loading 1s ease-in-out infinite;
+}
+.loading-bar:nth-child(1) {
+  background-color: #673ab7;
+  animation-delay: 0;
+}
+.loading-bar:nth-child(2) {
+  background-color: #673ab7;
+  animation-delay: 0.09s;
+}
+.loading-bar:nth-child(3) {
+  background-color: #673ab7;
+  animation-delay: .18s;
+}
+.loading-bar:nth-child(4) {
+  background-color: #673ab7;
+  animation-delay: .27s;
+}
+.loadingParagraph {
+    position: absolute;
+    top: 75%;
+    left: 500px;
+    transform: translateX(-50%) translateY(200%);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color:#673ab7;
+    font-size: 20px;
+    z-index: -1;
+}
+
+@keyframes loading {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1, 2.2);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+.mainContainer {
+    width:100%;
+}
+
+.firstContainer {
+    margin: 0 auto;
+    position: relative;
+    width: 100%;
+    height: 250px;
+    background-color: #673ab7;
+}
+
+.inputStyle {
+    width: 350px;
+    height:30px;
+    position: absolute;
+    top: 20%;
+    left: 500px;
+    transform: translateY(-50%) translateX(-50%);
+    border: 1px solid #9681bb;
+    border-radius: 5px;
+    padding-left: 5px;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+.inputStyle:focus{
+    outline-color: #673ab7;
+    color: black;
+    font-weight: 400;
+}
+
+.buttonStyle {
+    position: absolute;
+    top: 20%;
+    left: 650px;
+    transform: translateY(-50%) translateX(-50%);
+    border-radius: 0 5px 5px 0;
+    width: 50px;
+    height:30px;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    background-color: #9681bb
+}
+
+.fa-search:before, .fa-undo:before {
+    color: white;
+}
+
+.buttonStyle:hover, .resetButton:hover {
+    cursor: pointer;
+    background-color: #d4c3f1;
+    transition: all .2s linear;
+}
+
+.buttonStyle:focus, .resetButton:focus {
+    outline: none;
+}
+
+.resetButton {
+    position: absolute;
+    top: 20%;
+    left: 725px;
+    transform: translateY(-50%) translateX(-50%);
+    border-radius: 5px;
+    width: 50px;
+    height:30px;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    background-color: #9681bb
+}
+
+
+
+
+.extraParam {
+    width: 350px;
+    height: 100px;
+    position: relative;
+    top: 60%;
+    left: 500px;
+    transform: translateY(-50%) translateX(-50%);
+    border-radius: 5px;
+    padding-left: 5px;
+    text-transform: lowercase;
+    font-size: 16px;
+    color: white;
+    font-weight: 700;
+    display: inline-flex;
+}
+
+.conditionParam {
+    background-color: #9680bb;
+    border-radius: 5px;
+    height: 130px;
+}
+
+.dateParam {
+    margin-left: 30px;
+    background-color: #9680bb;
+    border-radius: 5px;
+    padding: 7px 27px;
+    height: 130px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+label {
+    display: block;
+    position: relative;
+    padding-left: 50px;
+    padding-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+label span {
+    background: #fff;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    border: 1px solid #eaeaea;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    transition: all .2s linear;
+}
+
+input[type="radio"] + span {
+    border-radius: 50%;
+}
+
+label:hover span {
+    border: 3px solid #d4c3f1
+}
+
+input[type="checkbox"]:checked + span,
+input[type="radio"]:checked + span{
+    border: 7px solid #d4c3f1;
+}
+
+.startEndDates {
+    text-align: center;
+}
+
+.react-datepicker__input-container input[type="text"] {
+    border-radius: 5px;
+    border: 1px solid #9681bb;
+    height: 30px;
+    width: 150px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    color: #9681bb;
+}
+
+.react-datepicker__input-container input[type="text"]:focus {
+    outline: none;
+}
+
+
+
+.secondContainer {
+    margin: 0 auto 30px auto;
+    width: 100%;
+    height: 120px;
+    background-color: #d4c3f1;
+}
+
+.statsName {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.statsResults {
+    display: flex;
+    justify-content: center;
+}
+
+.statsElements {
+    width:75px;
+    height: 75px;
+    border-radius: 75px;
+    background-color: white;
+    text-align: center;
+    line-height: 70px;
+    margin-right: 35px;
+    margin-top: 10px;
+    border: double 3px transparent;
+    background-image: linear-gradient(white, white), radial-gradient(circle at top left,#a05656,#1f11dc);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    font-size: 20px;
+}
+
+.statsElementsName {
+    width:75px;
+    height: 50px;
+    font-weight: 700;
+    text-align: center;
+    margin-right: 35px;
+    text-transform: uppercase;
+    font-size: 12px;
+
+}
+
+.tableStyle {
+    margin: 30px auto 0 auto;
+    width:1000px;
+}
+
+th {
+    text-transform: uppercase;
+    background-color: #9681bb;
+}
+
+td {
+    text-align: center;
+}
+
+.textToLeft {
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.fas, .fa-external-link-alt {
+    color: #9681bb;
+}
