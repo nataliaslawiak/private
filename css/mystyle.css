@@ -36,15 +36,15 @@
   animation-delay: .27s;
 }
 .loadingParagraph {
-    position: absolute;
-    top: 75%;
-    left: 500px;
+    position: relative;
+    left: 48%;
     transform: translateX(-50%) translateY(200%);
     text-transform: uppercase;
     letter-spacing: 2px;
     color:#673ab7;
     font-size: 20px;
     z-index: -1;
+    width:200px;
 }
 
 @keyframes loading {
@@ -63,21 +63,29 @@
     width:100%;
 }
 
-.firstContainer {
+.firstContainerWrapper {
     margin: 0 auto;
     position: relative;
     width: 100%;
+    height: 350px;
+    background-color: #673ab7;
+}
+
+.firstContainer{
+    margin: 0 auto;
+    position: relative;
+    width: 700px;
     height: 250px;
-    background-color: red;
+    background-color: #673ab7;
 }
 
 .inputStyle {
     width: 350px;
     height:30px;
-    position: absolute;
+    position: relative;
     top: 20%;
-    left: 500px;
-    transform: translateY(-50%) translateX(-50%);
+    left: 15%;
+   /* transform: translateY(-50%) translateX(-50%); */
     border: 1px solid #9681bb;
     border-radius: 5px;
     padding-left: 5px;
@@ -92,10 +100,10 @@
 }
 
 .buttonStyle {
-    position: absolute;
+    position: relative;
     top: 20%;
-    left: 650px;
-    transform: translateY(-50%) translateX(-50%);
+    left: 14%;
+  /*  transform: translateY(-50%) translateX(-50%);*/
     border-radius: 0 5px 5px 0;
     width: 50px;
     height:30px;
@@ -122,10 +130,10 @@
 }
 
 .resetButton {
-    position: absolute;
+    position: relative;
     top: 20%;
-    left: 725px;
-    transform: translateY(-50%) translateX(-50%);
+    left: 20%;
+ /*   transform: translateY(-50%) translateX(-50%);*/
     border-radius: 5px;
     width: 50px;
     height:30px;
@@ -144,9 +152,9 @@
     width: 350px;
     height: 100px;
     position: relative;
-    top: 60%;
-    left: 500px;
-    transform: translateY(-50%) translateX(-50%);
+    top: 30%;
+    left: 15%;
+   /* transform: translateY(-50%) translateX(-50%);*/
     border-radius: 5px;
     padding-left: 5px;
     text-transform: lowercase;
@@ -160,6 +168,13 @@
     background-color: #9680bb;
     border-radius: 5px;
     height: 130px;
+}
+
+.categoryParam {
+    background-color: #9680bb;
+    border-radius: 5px;
+    height: 225px;
+    margin-left:30px;
 }
 
 .dateParam {
@@ -279,7 +294,7 @@ input[type="radio"]:checked + span{
 
 .tableStyle {
     margin: 30px auto 0 auto;
-    width:1000px;
+    width:96%;
 }
 
 th {
@@ -289,6 +304,7 @@ th {
 
 td {
     text-align: center;
+    height:40px;
 }
 
 .textToLeft {
@@ -302,3 +318,24 @@ tr:nth-child(even) {
 .fas, .fa-external-link-alt {
     color: #9681bb;
 }
+
+.btn-export {
+    width:100px;
+    height:50px;
+    position: absolute;
+    top: 105px;
+    left: 64%;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #9681bb;
+    font-size: 16px;
+    background-color: #9681bb;
+    font-size: 16px;
+    color: white;
+}
+
+.btn-export:hover{
+    background-color: #d4c3f1;
+    border: 1px solid #d4c3f1;
+}
+

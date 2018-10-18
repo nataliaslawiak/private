@@ -7,10 +7,12 @@ class TableFooter extends React.Component {
                 <tr>
                     <td> - </td>
                     <td> - </td>
+                    <td> - </td>
+                    <td> - </td>
+                    <td> - </td>
                     <td>{this.props.sum}</td>
                     <td> - </td>
                     <td>{this.props.sumWithShipping}</td>
-                    <td> - </td>
                     <td> - </td>
                     <td> - </td>
                     <td> - </td>

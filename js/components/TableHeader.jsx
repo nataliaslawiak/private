@@ -7,6 +7,9 @@ class TableHeader extends React.Component {
                 <tr>
                     <th>Lp.</th>
                     <th>Tytuł</th>
+                    <th>Kategoria</th>
+                    <th>Kategoria eBay</th>
+                    <th>Obserwujących</th>
                     <th>Cena</th>
                     <th>Wysyłka</th>
                     <th>Suma</th>

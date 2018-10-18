@@ -29,6 +29,12 @@ class InputWithURL extends React.Component {
         } 
     }
 
+    handleCheckboxCategoryChange = (categoryValue) => {
+        if (typeof this.props.changeCategory === "function") {
+            this.props.changeCategory(categoryValue);
+        } 
+    }
+
     render () {
         return (
             <div className="firstContainer">
@@ -44,6 +50,24 @@ class InputWithURL extends React.Component {
                         <label>
                             <input type="radio" checked={this.props.conditionId==="3000"} onChange={e => this.handleCheckboxChange("3000")}/>
                             <span></span>USED
+                        </label>
+                    </div>
+                    <div className="categoryParam">
+                        <label>
+                            <input type="radio" checked={this.props.categoryId===""} onChange={e => this.handleCheckboxCategoryChange("")}/>
+                            <span></span>ALL
+                        </label>
+                        <label>
+                            <input type="radio" checked={this.props.categoryId==="&categoryId=15724"} onChange={e => this.handleCheckboxCategoryChange("&categoryId=15724")}/>
+                            <span></span>DAMEN
+                        </label>
+                        <label>
+                            <input type="radio" checked={this.props.categoryId==="&categoryId=1059"} onChange={e => this.handleCheckboxCategoryChange("&categoryId=1059")}/>
+                            <span></span>HERREN
+                        </label>
+                        <label>
+                            <input type="radio" checked={this.props.categoryId==="&categoryId=171146"} onChange={e => this.handleCheckboxCategoryChange("&categoryId=171146")}/>
+                            <span></span>KINDER
                         </label>
                     </div>
                     <div className="dateParam">

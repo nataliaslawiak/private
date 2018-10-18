@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import DatePicker from 'react-datepicker';
+import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
+import ReactToExcel from 'react-html-table-to-excel';
+//import BootstrapTable from 'react-bootstrap-table-next';
+//import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
+//const { ExportCSVButton } = CSVExport;
 //import moment from 'moment';
 //import 'react-datepicker/dist/react-datepicker.css';
 
@@ -42,6 +47,7 @@ function prepareUrl(params) {
     &RESPONSE-DATA-FORMAT=JSON
     &callback=_cb_findCompletedItems
     &REST-PAYLOAD
+    ${params.categoryId}
     &keywords=${params.filterItem.split(" ").join("+")}
     &itemFilter(0).name=Condition
     &itemFilter(0).value=${params.conditionId}
@@ -55,8 +61,7 @@ function prepareUrl(params) {
     &itemFilter(4).value=DE
     &paginationInput.entriesPerPage=100
     &paginationInput.pageNumber=${params.pageNumber}
-    &outputSelector(0)=CategoryHistogram
-    &outputSelector(1)=SellerInfo`.replace(/ /g,'');       
+    &outputSelector(0)=SellerInfo`.replace(/ /g,'');       
 }
 
 class EbayApi extends React.Component {
@@ -65,12 +70,14 @@ class EbayApi extends React.Component {
         this.state = {
             loading: false,
             itemList: [],
+            categoryList: [],
             queryParams: {
                 placeholderField: "Search items...",
                 pageNumber: 1,
                 totalPages: 100,
                 filterItem: "",
                 conditionId: "3000",
+                categoryId: "&categoryId=15724",
                 startDate: moment().add(-10, "days").format("YYYY-MM-DD"),
                 endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
             },
@@ -97,6 +104,7 @@ class EbayApi extends React.Component {
                 totalPages: 100,
                 filterItem: "",
                 conditionId: "3000",
+                categoryId: "",
                 startDate: moment().add(-30, "days").format("YYYY-MM-DD"),
                 endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
             },
@@ -108,6 +116,15 @@ class EbayApi extends React.Component {
             queryParams: {
                 ...this.state.queryParams,
                 conditionId: conditionValue,
+            }
+        }); 
+    }
+
+    changeCategory = (categoryValue) => {
+        this.setState({
+            queryParams: {
+                ...this.state.queryParams,
+                categoryId: categoryValue,
             }
         }); 
     }
@@ -130,6 +147,8 @@ class EbayApi extends React.Component {
         });
     }
 
+    
+
     // Main Fetch
     fetchItems = () => {
         this.setState({
@@ -140,13 +159,15 @@ class EbayApi extends React.Component {
             // Response w formacie text, przygotowanie pod JSON.parse
             .then(data => JSON.parse(data.slice(57).slice(0, -2))[0])
             .then(data => {
-                // Dane artykulow w items, dane do paginacji w totalPages
+                // Dane artykulow w items, dane do kategorii w categories, dane do paginacji w totalPages
                 const items = data.searchResult[0].item;
+                //const categories = data.categoryHistogramContainer[0].categoryHistogram;
                 const totalPages = Number(data.paginationOutput[0].totalPages[0]);
                 console.log(moment(this.state.queryParams.startDate._d).format("YYYY-DD-MM"));
                 if (this.state.queryParams.pageNumber<totalPages) {
                     this.setState({
                         itemList: [...this.state.itemList, ...items],
+                        //categoryList: [...this.state.categoryList, ...categories],
                         queryParams: {
                             ...this.state.queryParams,
                             pageNumber: this.state.queryParams.pageNumber + 1,
@@ -157,6 +178,7 @@ class EbayApi extends React.Component {
                     this.setState({
                         loading: false,
                         itemList: [...this.state.itemList, ...items],
+                        //categoryList: [...this.state.categoryList, ...categories],
                         //pageNumber: 1,
                     });
                 };
@@ -171,13 +193,58 @@ class EbayApi extends React.Component {
 
     //Metody do tworzenia TableItems
     createTableItems = () => {
-        const {loading, itemList, queryParams} = this.state;
+        const {loading, itemList, queryParams, categoryList} = this.state;
+        //const categoryItems = categoryList.map((categoryHistogram) => {
+            //return(
+                    //<td>{categoryHistogram.childCategoryHistogram[0].categoryName}</td>
+                
+            //)}
+        //)
+        //{categoryItems}
+        
         return (
             itemList.map((item, index) => {
+
+                //wartosc pola Kategoria
+                let categoryItems;
+                if (this.state.queryParams.categoryId === "&categoryId=15724"){
+                    categoryItems = "Damen";
+                }
+                else if (this.state.queryParams.categoryId === "&categoryId=1059"){
+                    categoryItems = "Herren";
+                }
+                else if (this.state.queryParams.categoryId === "&categoryId=171146"){
+                    categoryItems = "Kinder";
+                } else {
+                    categoryItems = "Alle";
+                }
+
+                //wartosc pola Kategoria ebay
+                const damenCategoryArray = [185080,185079,185082,155226,185083,185084,63862,63861,11554,63866,3009,169001,11555,63864,63865,63867,53159,63863,11522,45909,63853,11521,63854,63855,11530,11532,163586,15746,163593,4844];
+                const herrenCategoryArray = [185075,185702,185076,155183,185708,57988,11483,11484,11510,57990,57991,185101,15687,15689,11511,3001,15690,57989,11507];
+                const kinderCategoryArray = [51933,57916,77475,51946,84544,156790,15615,153564,51959,99754,51919,51920,152487,51960,51973,28016,15620,51580,51581,152554,77411,51582,175528,152719,99735,156801,15648,51583,153797,51584,51567,51568,175768,51585,51586,28017,15652];
+                
+                let ebayCategoryItems;
+                if (damenCategoryArray.indexOf(Number(item.primaryCategory[0].categoryId[0])) > -1) {
+                    ebayCategoryItems = "Damen";
+                }
+                else if(herrenCategoryArray.indexOf(Number(item.primaryCategory[0].categoryId[0])) > -1){
+                    ebayCategoryItems = "Herren";
+                }
+                else if(kinderCategoryArray.indexOf(Number(item.primaryCategory[0].categoryId[0])) > -1){
+                    ebayCategoryItems = "Kinder";
+                } else {
+                    ebayCategoryItems = "Irrelevant";
+                }
+
+               
                 return (
                     <tr key={index+1}>
                             <td>{index+1}</td>
                             <td className="textToLeft">{item.title}</td>
+                            <td>{categoryItems}</td>
+                            <td>{ebayCategoryItems}</td>
+                            <td>{(Number(item.listingInfo[0].watchCount).toFixed(0)) >= 0 ? (Number(item.listingInfo[0].watchCount)) : 0}</td>
                             <td>{(Number(item.sellingStatus[0].currentPrice[0].__value__)).toFixed(2)}</td>
                             <td>{(Number(item.shippingInfo[0].shippingServiceCost[0].__value__)).toFixed(2)}</td>
                             <td>{((Number(item.shippingInfo[0].shippingServiceCost[0].__value__)) + (Number(item.sellingStatus[0].currentPrice[0].__value__))).toFixed(2)}</td>
@@ -266,7 +333,7 @@ class EbayApi extends React.Component {
         const {loading} = this.state;       
         return (
                 <div className="mainContainer">
-                    <div className="firstContainer">
+                    <div className="firstContainerWrapper">
                     <InputWithURL 
                         placeholderField={this.state.queryParams.placeholderField}
                         filterItem={this.state.queryParams.filterItem} 
@@ -274,7 +341,9 @@ class EbayApi extends React.Component {
                         fetchItems={this.fetchItems}
                         resetSearch={this.resetSearch}
                         conditionId={this.state.queryParams.conditionId}
+                        categoryId={this.state.queryParams.categoryId}
                         changeCondition={this.changeCondition}
+                        changeCategory={this.changeCategory}
                         startDate = {this.state.queryParams.startDate}
                         endDate = {this.state.queryParams.endDate}
                         startDataChange = {this.startDataChange}
@@ -309,12 +378,19 @@ class EbayApi extends React.Component {
                             itemsPerDay={this.createItemsPerDay()} 
                             arrayWithRevenue={this.createArrayWithRevenue()} 
                         />
-                        <table className="tableStyle">
+                        <table className="tableStyle" id="table-to-xls">
                             <TableHeader />
                             <TableItems list={this.createTableItems()}/>
                             <TableFooter 
                             sum={this.sumAllPrices().toFixed(2)}
                             sumWithShipping={this.sumAllPricesWithShipping().toFixed(2)}
+                            />
+                            <ReactToExcel
+                                className="btn-export"
+                                table="table-to-xls"
+                                filename="ebayFetchFile"
+                                sheet="sheet 1"
+                                buttonText="EXPORT"
                             />
                         </table>
                     </div>}
