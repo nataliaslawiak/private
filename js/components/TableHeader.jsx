@@ -6,6 +6,7 @@ class TableHeader extends React.Component {
             <thead>
                 <tr>
                     <th>Lp.</th>
+                    <th>Foto</th>
                     <th>Tytuł</th>
                     <th>Kategoria</th>
                     <th>Kategoria eBay</th>

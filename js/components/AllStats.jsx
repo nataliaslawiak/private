@@ -1,7 +1,10 @@
 import React from 'react';
 
+
 class AllStats extends React.Component {
+
     render () {
+        
         return (
             <div className="secondContainer">
                 <div className="statsResults">
@@ -21,6 +24,7 @@ class AllStats extends React.Component {
                     <div className="statsElementsName">St.Dev [%]</div>
                 </div>
             </div>
+            
         );
     };
 };

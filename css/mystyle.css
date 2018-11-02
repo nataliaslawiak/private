@@ -80,7 +80,7 @@
 }
 
 .inputStyle {
-    width: 350px;
+    width: 182px;
     height:30px;
     position: relative;
     top: 20%;
@@ -339,3 +339,26 @@ tr:nth-child(even) {
     border: 1px solid #d4c3f1;
 }
 
+.imgURL{
+    width:80px;
+    height:80px;
+    background-size: 100%;
+    background-repeat: no-repeat
+}
+
+.sellersTable{
+    border:3px solid #9681bb;
+    width:400px;
+    margin:0 auto;
+    display:block;
+}
+
+.sellersTable td {
+    width:25%;
+}
+
+.sellersTH{
+    text-align: center;
+    height:50px;
+    line-height: 50px;
+}

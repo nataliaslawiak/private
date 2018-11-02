@@ -17,6 +17,9 @@ import ChartRevenuePerDay from './components/ChartRevenuePerDay.jsx';
 import TableHeader from './components/TableHeader.jsx';
 import TableItems from './components/TableItems.jsx';
 import TableFooter from './components/TableFooter.jsx';
+//import TableSellerWrapper from './components/TableSellerWrapper.jsx';
+import TableSeller from './components/TableSeller.jsx';
+
 
 
 //Dodatkowe moduly (Statystyka, Chart)
@@ -59,6 +62,9 @@ function prepareUrl(params) {
     &itemFilter(3).value=true
     &itemFilter(4).name=LocatedIn
     &itemFilter(4).value=DE
+    ${params.sellerOne}
+    ${params.sellerTwo}
+    ${params.sellerThree}
     &paginationInput.entriesPerPage=100
     &paginationInput.pageNumber=${params.pageNumber}
     &outputSelector(0)=SellerInfo`.replace(/ /g,'');       
@@ -73,6 +79,7 @@ class EbayApi extends React.Component {
             categoryList: [],
             queryParams: {
                 placeholderField: "Search items...",
+                placeholderSellerField: "Search seller...",
                 pageNumber: 1,
                 totalPages: 100,
                 filterItem: "",
@@ -80,9 +87,13 @@ class EbayApi extends React.Component {
                 categoryId: "&categoryId=15724",
                 startDate: moment().add(-10, "days").format("YYYY-MM-DD"),
                 endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
+                sellerOne:"",
+                sellerTwo:"",
+                sellerThree:"",
             },
         };
     }
+
    
     // Metody dla komponentu InputWithURL
     searchItem = (filterItem) => {
@@ -94,12 +105,24 @@ class EbayApi extends React.Component {
         }); 
     }
 
+    searchSeller = (sellerThree) => {
+        this.setState({
+            queryParams: {
+                ...this.state.queryParams,
+                sellerOne:"&itemFilter(5).name=Seller",
+                sellerTwo:"&itemFilter(5).value=",
+                sellerThree:sellerThree,
+            }
+        }); 
+    }
+
     resetSearch = () => {
         this.setState({
             loading: false,
             itemList: [],
             queryParams: {
                 placeholderField: "Search items...",
+                placeholderSellerField: "Search seller...",
                 pageNumber: 1,
                 totalPages: 100,
                 filterItem: "",
@@ -107,6 +130,9 @@ class EbayApi extends React.Component {
                 categoryId: "",
                 startDate: moment().add(-30, "days").format("YYYY-MM-DD"),
                 endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
+                sellerOne:"",
+                sellerTwo:"",
+                sellerThree:"",
             },
         }); 
     }
@@ -241,13 +267,14 @@ class EbayApi extends React.Component {
                 return (
                     <tr key={index+1}>
                             <td>{index+1}</td>
+                            <td className="imgURL" style={{backgroundImage: `url(${item.galleryURL})`}}></td>
                             <td className="textToLeft">{item.title}</td>
                             <td>{categoryItems}</td>
                             <td>{ebayCategoryItems}</td>
                             <td>{(Number(item.listingInfo[0].watchCount).toFixed(0)) >= 0 ? (Number(item.listingInfo[0].watchCount)) : 0}</td>
                             <td>{(Number(item.sellingStatus[0].currentPrice[0].__value__)).toFixed(2)}</td>
-                            <td>{(Number(item.shippingInfo[0].shippingServiceCost[0].__value__)).toFixed(2)}</td>
-                            <td>{((Number(item.shippingInfo[0].shippingServiceCost[0].__value__)) + (Number(item.sellingStatus[0].currentPrice[0].__value__))).toFixed(2)}</td>
+                            <td>{item.shippingInfo[0].shippingType[0]!=="NotSpecified" ? (Number(item.shippingInfo[0].shippingServiceCost[0].__value__).toFixed(2)) : 0.01}</td>
+                            <td>{item.shippingInfo[0].shippingType[0]!=="NotSpecified" ? (Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__)).toFixed(2) : (Number(item.sellingStatus[0].currentPrice[0].__value__)).toFixed(2)}</td>
                             <td>{item.sellingStatus[0].sellingState=="EndedWithSales" ? "Sold" : "Not"}</td>
                             <td>{item.listingInfo[0].listingType=="FixedPrice" ? "Fixed" : "Bid"}</td>
                             <td>{moment(item.listingInfo[0].endTime, moment.ISO_8601).format("MM-DD-YYYY")}</td>
@@ -259,6 +286,7 @@ class EbayApi extends React.Component {
         );
     };
 
+    
     //Metody do tworzenia AllStats
     sumAllPrices = () => {
         return (
@@ -273,7 +301,7 @@ class EbayApi extends React.Component {
     sumAllPricesWithShipping = () => {
         return (
             this.state.itemList
-            .map(item => Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__))
+            .map(item => item.shippingInfo[0].shippingType[0]!=="NotSpecified" ? (Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__)) : (Number(item.sellingStatus[0].currentPrice[0].__value__)))
             .reduce(function (accumulator, currentValue) {
                 return accumulator + currentValue;
             }, 0)
@@ -299,14 +327,14 @@ class EbayApi extends React.Component {
 
     createArrayWithPrices = () => {
         return (
-            this.state.itemList.map(item => Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__))
+            this.state.itemList.map(item => item.shippingInfo[0].shippingType[0]!=="NotSpecified" ? (Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__)) : (Number(item.sellingStatus[0].currentPrice[0].__value__)))
         );
     }
 
     createArrayWithRevenue = () => {
         return (
             Object.values(this.createItemsPerDay()).map(items => items.reduce(function (accumulator, item) {
-                let result = accumulator + parseFloat(Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__));
+                let result = accumulator + parseFloat(item.shippingInfo[0].shippingType[0]!=="NotSpecified" ? (Number(item.shippingInfo[0].shippingServiceCost[0].__value__) + Number(item.sellingStatus[0].currentPrice[0].__value__)) : (Number(item.sellingStatus[0].currentPrice[0].__value__)));
                 return result;
             }, 0).toFixed(2)
             )
@@ -322,11 +350,37 @@ class EbayApi extends React.Component {
                     } else {
                         accObject[day].push(item);
                     }
+                /*console.log(accObject);*/
                 return accObject;
             },{})
         );
     }
 
+    sellerCount = () => {
+        return (
+            this.state.itemList.reduce((sellerObject,item) => {
+                const sellerKey = item.sellerInfo[0].sellerUserName;
+                    if (!sellerObject[sellerKey]) {
+                        sellerObject[sellerKey] = [item];
+                    } else {
+                        sellerObject[sellerKey].push(item);
+                    }
+                return sellerObject;
+            },{})
+            
+        );
+    }
+
+    /*createTableSellers = () => {
+        sellerCount();
+        console.log(sellerObject);
+        return (
+            <tr>
+                <td>test1</td>
+                <td>test1</td>
+            </tr>
+        )
+    };*/
 
     render () {
            
@@ -336,7 +390,12 @@ class EbayApi extends React.Component {
                     <div className="firstContainerWrapper">
                     <InputWithURL 
                         placeholderField={this.state.queryParams.placeholderField}
-                        filterItem={this.state.queryParams.filterItem} 
+                        placeholderSellerField={this.state.queryParams.placeholderSellerField}
+                        filterItem={this.state.queryParams.filterItem}
+                        sellerOne={this.state.queryParams.sellerOne}
+                        sellerTwo={this.state.queryParams.sellerTwo} 
+                        sellerThree={this.state.queryParams.sellerThree}
+                        searchSeller={this.searchSeller}
                         searchItem={this.searchItem} 
                         fetchItems={this.fetchItems}
                         resetSearch={this.resetSearch}
@@ -372,12 +431,16 @@ class EbayApi extends React.Component {
                             median={this.medianAll().toFixed(2)} 
                             range={this.rangeAll().toFixed(2)} 
                             stddev={this.stddevAll().toFixed(2)}
+                        
                         />
                         <ChartItemsPerDay itemsPerDay={this.createItemsPerDay()} />
                         <ChartRevenuePerDay 
                             itemsPerDay={this.createItemsPerDay()} 
                             arrayWithRevenue={this.createArrayWithRevenue()} 
                         />
+                        
+                        <TableSeller sellerCount={this.sellerCount()}/>
+                        
                         <table className="tableStyle" id="table-to-xls">
                             <TableHeader />
                             <TableItems list={this.createTableItems()}/>

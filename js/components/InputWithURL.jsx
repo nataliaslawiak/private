@@ -11,6 +11,13 @@ class InputWithURL extends React.Component {
         } 
     }
 
+    handleSellerInputChange = (e) => {
+        if (typeof this.props.searchSeller === "function") {
+            this.props.searchSeller(e.target.value);
+        } 
+    }
+
+
     handleClick = () => {
         if (typeof this.props.fetchItems === "function") {
             this.props.fetchItems();
@@ -39,6 +46,12 @@ class InputWithURL extends React.Component {
         return (
             <div className="firstContainer">
                 <input className="inputStyle" type="text" value={this.props.filterItem} placeholder={this.props.placeholderField} id="filterItem" onChange={e => this.handleInputChange(e)}/>
+                <input className="inputStyle" type="text" value={this.props.sellerThree} placeholder={this.props.placeholderSellerField} id="sellerThree" list="sellerList" onChange={e => this.handleSellerInputChange(e)}/>
+                    <datalist id="sellerList">
+                        <option>buddyandselly</option>
+                        <option>familiare-store</option>
+                        <option>ubup</option>
+                    </datalist>
                 <button className="buttonStyle" onClick={e => this.handleClick(e)}><i className="fas fa-search"></i></button>
                 <button className="resetButton" onClick={e => this.handleClickReset(e)}><i className="fas fa-undo"></i></button>
                 <div className="extraParam">
