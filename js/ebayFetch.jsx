@@ -17,8 +17,9 @@ import ChartRevenuePerDay from './components/ChartRevenuePerDay.jsx';
 import TableHeader from './components/TableHeader.jsx';
 import TableItems from './components/TableItems.jsx';
 import TableFooter from './components/TableFooter.jsx';
-//import TableSellerWrapper from './components/TableSellerWrapper.jsx';
 import TableSeller from './components/TableSeller.jsx';
+import TableWatchers from './components/TableWatchers.jsx';
+import TablePrices from './components/TablePrices.jsx';
 
 
 
@@ -45,7 +46,7 @@ function prepareUrl(params) {
     return `http://svcs.ebay.com/services/search/FindingService/v1
     ?OPERATION-NAME=findCompletedItems
     &SERVICE-VERSION=1.0.0
-    &SECURITY-APPNAME=xyz
+    &SECURITY-APPNAME=MichalKr-Test-PRD-e5d80d3bd-41bbd681
     &GLOBAL-ID=EBAY-DE
     &RESPONSE-DATA-FORMAT=JSON
     &callback=_cb_findCompletedItems
@@ -92,6 +93,7 @@ class EbayApi extends React.Component {
                 sellerThree:"",
             },
         };
+        //this.sortBy = this.sortBy.bind(this)
     }
 
    
@@ -220,17 +222,10 @@ class EbayApi extends React.Component {
     //Metody do tworzenia TableItems
     createTableItems = () => {
         const {loading, itemList, queryParams, categoryList} = this.state;
-        //const categoryItems = categoryList.map((categoryHistogram) => {
-            //return(
-                    //<td>{categoryHistogram.childCategoryHistogram[0].categoryName}</td>
-                
-            //)}
-        //)
-        //{categoryItems}
-        
-        return (
-            itemList.map((item, index) => {
 
+        return(
+            itemList.map((item, index) => {
+            
                 //wartosc pola Kategoria
                 let categoryItems;
                 if (this.state.queryParams.categoryId === "&categoryId=15724"){
@@ -244,7 +239,7 @@ class EbayApi extends React.Component {
                 } else {
                     categoryItems = "Alle";
                 }
-
+    
                 //wartosc pola Kategoria ebay
                 const damenCategoryArray = [185080,185079,185082,155226,185083,185084,63862,63861,11554,63866,3009,169001,11555,63864,63865,63867,53159,63863,11522,45909,63853,11521,63854,63855,11530,11532,163586,15746,163593,4844];
                 const herrenCategoryArray = [185075,185702,185076,155183,185708,57988,11483,11484,11510,57990,57991,185101,15687,15689,11511,3001,15690,57989,11507];
@@ -262,8 +257,8 @@ class EbayApi extends React.Component {
                 } else {
                     ebayCategoryItems = "Irrelevant";
                 }
-
-               
+    
+            
                 return (
                     <tr key={index+1}>
                             <td>{index+1}</td>
@@ -281,10 +276,13 @@ class EbayApi extends React.Component {
                             <td>{item.sellerInfo[0].sellerUserName}</td>
                             <td><a href={"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + item.itemId} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
-                )}
-            )
-        );
-    };
+                    )}
+                )
+            );
+        
+         }
+        
+  
 
     
     //Metody do tworzenia AllStats
@@ -331,6 +329,34 @@ class EbayApi extends React.Component {
         );
     }
 
+    //Watches
+
+    sumAllWatches = () => {
+        return (
+            this.state.itemList
+            .map(item => Number(item.listingInfo[0].watchCount) >= 0 ? (Number(item.listingInfo[0].watchCount)) : 0)
+            .reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue;
+            }, 0)
+        );  
+    };
+    
+    meanWatches = () => {
+        return sm.mean(this.createArrayWithWatches());
+    }
+
+    medianWatches = () => {
+        return sm.median(this.createArrayWithWatches());
+    }
+    
+    createArrayWithWatches = () => {
+        return (
+            this.state.itemList.map(item => Number(item.listingInfo[0].watchCount) >= 0 ? (Number(item.listingInfo[0].watchCount)) : 0)
+        );
+    }
+
+    //Charts
+
     createArrayWithRevenue = () => {
         return (
             Object.values(this.createItemsPerDay()).map(items => items.reduce(function (accumulator, item) {
@@ -365,26 +391,34 @@ class EbayApi extends React.Component {
                     } else {
                         sellerObject[sellerKey].push(item);
                     }
+                    //console.log(sellerObject);
                 return sellerObject;
             },{})
             
         );
     }
 
-    /*createTableSellers = () => {
-        sellerCount();
-        console.log(sellerObject);
-        return (
-            <tr>
-                <td>test1</td>
-                <td>test1</td>
-            </tr>
-        )
-    };*/
-
+    watcherCount = () => {
+       return (
+            this.state.itemList.reduce((watcherObject,item) => {
+                const watcherKey = item.itemId;
+                    if (!watcherObject[watcherKey]) {
+                        watcherObject[watcherKey] = [item];
+                    } else {
+                        watcherObject[watcherKey].push(item);
+                        
+                    }
+                    //console.log(watcherObject);
+                return watcherObject;
+            },{})
+            
+        );
+    }
+        
+    
     render () {
            
-        const {loading} = this.state;       
+        const {loading} = this.state;     
         return (
                 <div className="mainContainer">
                     <div className="firstContainerWrapper">
@@ -431,7 +465,8 @@ class EbayApi extends React.Component {
                             median={this.medianAll().toFixed(2)} 
                             range={this.rangeAll().toFixed(2)} 
                             stddev={this.stddevAll().toFixed(2)}
-                        
+                            meanWatch={this.meanWatches().toFixed(2)}
+                            medianWatch={this.medianWatches().toFixed(2)}
                         />
                         <ChartItemsPerDay itemsPerDay={this.createItemsPerDay()} />
                         <ChartRevenuePerDay 
@@ -440,9 +475,15 @@ class EbayApi extends React.Component {
                         />
                         
                         <TableSeller sellerCount={this.sellerCount()}/>
+                        <TableWatchers watcherCount={this.watcherCount()}/>
+                        <TablePrices watcherCount={this.watcherCount()}/>
                         
                         <table className="tableStyle" id="table-to-xls">
-                            <TableHeader />
+                            <TableHeader 
+                                list={this.createTableItems()}
+                                //sortyBy={this.sortBy}
+                                //itemList={this.state.itemList}
+                            />
                             <TableItems list={this.createTableItems()}/>
                             <TableFooter 
                             sum={this.sumAllPrices().toFixed(2)}

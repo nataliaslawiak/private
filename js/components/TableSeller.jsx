@@ -5,13 +5,6 @@ class TableSeller extends React.Component {
         var entriesObj = Object.entries(this.props.sellerCount);
         var keysObj = Object.keys(this.props.sellerCount);
         var valsObj = Object.values(this.props.sellerCount).map(items => items.length);
-        console.log(entriesObj);
-        console.log(keysObj);
-        console.log(valsObj);
-
-        
-
-        console.log(sortable);
     }
 
     render () {
@@ -25,12 +18,13 @@ class TableSeller extends React.Component {
            return b[1] - a[1];
         });
 
-        console.log(entriesObj);
+        //console.log(entriesObj);
+        //console.log(sortable);
 
         return (
             <table className="sellersTable">
                 <thead className="sellersTH">
-                    10 top sellers
+                    TOP 10 SPRZEDAWCÓW
                 </thead>
                 <tbody>
                     <tr>

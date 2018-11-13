@@ -14,6 +14,8 @@ class AllStats extends React.Component {
                     <div className="statsElements">{this.props.median}</div>
                     <div className="statsElements">{this.props.range}</div>
                     <div className="statsElements">{this.props.stddev}</div>
+                    <div className="statsElements">{this.props.meanWatch}</div>
+                    <div className="statsElements">{this.props.medianWatch}</div>
                 </div>
                 <div className="statsName">
                     <div className="statsElementsName">Total [No.]</div>
@@ -22,6 +24,8 @@ class AllStats extends React.Component {
                     <div className="statsElementsName">Median [€]</div>
                     <div className="statsElementsName">Range [€]</div>
                     <div className="statsElementsName">St.Dev [%]</div>
+                    <div className="statsElementsName">Mean [No.Watch]</div>
+                    <div className="statsElementsName">Median [Watch]</div>
                 </div>
             </div>
             

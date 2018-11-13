@@ -1,7 +1,11 @@
 import React from 'react';
 
 class TableHeader extends React.Component {
+
     render () {
+        var itemList = this.props.list;
+      
+        
         return (
             <thead>
                 <tr>
