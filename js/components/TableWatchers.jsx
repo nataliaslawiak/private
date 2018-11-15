@@ -98,51 +98,51 @@ class TableWatchers extends React.Component {
                     </tr>
                     <tr>
                         <td>11.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[10][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[10][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[10][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[10]) === 'undefined'? "-" : sortable[10][1]}</td>
+                        <td>{(typeof sortable[10]) === 'undefined'? "-" : sortable[10][0]}</td>
+                        <td><a href={(typeof sortable[10]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[10][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>12.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[11][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[11][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[11][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[11]) === 'undefined'? "-" : sortable[11][1]}</td>
+                        <td>{(typeof sortable[11]) === 'undefined'? "-" : sortable[11][0]}</td>
+                        <td><a href={(typeof sortable[11]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[11][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>13.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[12][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[12][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[12][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[12]) === 'undefined'? "-" : sortable[12][1]}</td>
+                        <td>{(typeof sortable[12]) === 'undefined'? "-" : sortable[12][0]}</td>
+                        <td><a href={(typeof sortable[12]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[12][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>14.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[13][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[13][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[13][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[13]) === 'undefined'? "-" : sortable[13][1]}</td>
+                        <td>{(typeof sortable[13]) === 'undefined'? "-" : sortable[13][0]}</td>
+                        <td><a href={(typeof sortable[13]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[13][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>15.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[14][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[14][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[14][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[14]) === 'undefined'? "-" : sortable[14][1]}</td>
+                        <td>{(typeof sortable[14]) === 'undefined'? "-" : sortable[14][0]}</td>
+                        <td><a href={(typeof sortable[14]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[14][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>16.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[15][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[15][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[15][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[15]) === 'undefined'? "-" : sortable[15][1]}</td>
+                        <td>{(typeof sortable[15]) === 'undefined'? "-" : sortable[15][0]}</td>
+                        <td><a href={(typeof sortable[15]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[15][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>17.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[16][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[16][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[16][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[16]) === 'undefined'? "-" : sortable[16][1]}</td>
+                        <td>{(typeof sortable[16]) === 'undefined'? "-" : sortable[16][0]}</td>
+                        <td><a href={(typeof sortable[16]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[16][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>18.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[17][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[17][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[17][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[17]) === 'undefined'? "-" : sortable[17][1]}</td>
+                        <td>{(typeof sortable[17]) === 'undefined'? "-" : sortable[17][0]}</td>
+                        <td><a href={(typeof sortable[17]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[17][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>19.</td>
@@ -152,9 +152,9 @@ class TableWatchers extends React.Component {
                     </tr>
                     <tr>
                         <td>20.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[19][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[19][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[19][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[19]) === 'undefined'? "-" : sortable[19][1]}</td>
+                        <td>{(typeof sortable[19]) === 'undefined'? "-" : sortable[19][0]}</td>
+                        <td><a href={(typeof sortable[19]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[19][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                 </tbody>
             </table>
