@@ -24,6 +24,12 @@ class InputWithURL extends React.Component {
         } 
     }
 
+    handleClickImg = (clickValue) => {
+        if (typeof this.props.clickImg === "function") {
+            this.props.clickImg(clickValue);
+        } 
+    }
+
     handleClickReset = () => {
         if (typeof this.props.resetSearch === "function") {
             this.props.resetSearch();
@@ -95,6 +101,7 @@ class InputWithURL extends React.Component {
                             onChange={this.props.endDataChange}
                         />
                     </div>
+                    <input type="button" value= { this.props.show ? "HIDE IMG" : "SHOW IMG" } id="imgButton" className="btn-img" onClick={e => this.handleClickImg("{{backgroundImage: `url(${item.galleryURL})`}}")}></input>
                 </div>
             </div>
         );

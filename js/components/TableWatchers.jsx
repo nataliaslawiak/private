@@ -10,7 +10,7 @@ class TableWatchers extends React.Component {
     render () {
     
         var entriesObj = Object.entries(this.props.watcherCount);
-        console.log(entriesObj);
+        //console.log(entriesObj);
         var sortable = [];
         
         //Gdy jakas property nie zawsze istnieje (w tym przypadku watchCount), to nalezy odniesc sie do ostatniego istniejacego property (tu listingInfo)
@@ -146,9 +146,9 @@ class TableWatchers extends React.Component {
                     </tr>
                     <tr>
                         <td>19.</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[18][1]}</td>
-                        <td>{(typeof sortable[9]) === 'undefined'? "-" : sortable[18][0]}</td>
-                        <td><a href={(typeof sortable[9]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[18][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                        <td>{(typeof sortable[18]) === 'undefined'? "-" : sortable[18][1]}</td>
+                        <td>{(typeof sortable[18]) === 'undefined'? "-" : sortable[18][0]}</td>
+                        <td><a href={(typeof sortable[18]) === 'undefined'? "#" :"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + sortable[18][2]} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     <tr>
                         <td>20.</td>

@@ -323,18 +323,55 @@ tr:nth-child(even) {
     width:100px;
     height:50px;
     position: absolute;
-    top: 105px;
+    top: 175px;
     left: 63%;
     cursor: pointer;
     border-radius: 5px;
     border: 1px solid #9681bb;
     font-size: 16px;
     background-color: #9681bb;
-    font-size: 16px;
     color: white;
 }
 
 .btn-export:hover{
+    background-color: #d4c3f1;
+    border: 1px solid #d4c3f1;
+}
+
+.btn-export-seller {
+    width:100px;
+    height:50px;
+    position: absolute;
+    top: 247px;
+    left: 63%;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #9681bb;
+    background-color: #9681bb;
+    font-size: 16px;
+    color: white;
+}
+
+.btn-export-seller:hover{
+    background-color: #d4c3f1;
+    border: 1px solid #d4c3f1;
+}
+
+.btn-img {
+    width:100px;
+    height:50px;
+    position: absolute;
+    top: 0;
+    left: 150%;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #9681bb;
+    font-size: 16px;
+    background-color: #9681bb;
+    color: white;
+}
+
+.btn-img:hover{
     background-color: #d4c3f1;
     border: 1px solid #d4c3f1;
 }
@@ -393,9 +430,22 @@ tr:nth-child(even) {
     
 }
 
+.textArea {
+    width: 100%;
+    height: 100px;
+    border: 3px solid #9781be;
+    overflow-y: scroll;
+    padding: 10px;
+    margin: 10px;
+}
+
 @media only screen and (max-width: 1600px) {
     .btn-export {
         left:67%;
+    }
+
+    .btn-export {
+        left:148%;
     }
 
     .sellersTable{

@@ -17,12 +17,12 @@ class TableSeller extends React.Component {
         sortable.sort(function(a, b) {
            return b[1] - a[1];
         });
-
+        
         //console.log(entriesObj);
         //console.log(sortable);
 
         return (
-            <table className="sellersTable">
+            <table className="sellersTable" id="seller-to-xls">
                 <thead className="sellersTH">
                     TOP 10 SPRZEDAWCÓW
                 </thead>

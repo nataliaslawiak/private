@@ -17,8 +17,8 @@ class TablePrices extends React.Component {
            return b[1] - a[1];
         });
 
-        console.log(entriesObj);
-        console.log(sortable);
+        //console.log(entriesObj);
+        //console.log(sortable);
 
         return (
             <table className="sellersTable">

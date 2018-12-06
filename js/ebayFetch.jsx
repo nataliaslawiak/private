@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import DatePicker from 'react-datepicker';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ReactToExcel from 'react-html-table-to-excel';
+import ReactToExcelSeller from 'react-html-table-to-excel';
+import { renderToStaticMarkup } from 'react-dom/server'
+import $  from 'jquery';
 //import BootstrapTable from 'react-bootstrap-table-next';
 //import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
 //const { ExportCSVButton } = CSVExport;
@@ -56,9 +59,9 @@ function prepareUrl(params) {
     &itemFilter(0).name=Condition
     &itemFilter(0).value=${params.conditionId}
     &itemFilter(1).name=EndTimeFrom
-    &itemFilter(1).value=${params.startDate}T00:01:01.000Z
+    &itemFilter(1).value=${params.startDate}T23:00:01.000Z
     &itemFilter(2).name=EndTimeTo
-    &itemFilter(2).value=${params.endDate}T23:59:01.000Z
+    &itemFilter(2).value=${params.endDate}T22:59:01.000Z
     &itemFilter(3).name=SoldItemsOnly
     &itemFilter(3).value=true
     &itemFilter(4).name=LocatedIn
@@ -71,11 +74,14 @@ function prepareUrl(params) {
     &outputSelector(0)=SellerInfo`.replace(/ /g,'');       
 }
 
+
+
 class EbayApi extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: false,
+            show: false,
             itemList: [],
             categoryList: [],
             queryParams: {
@@ -86,14 +92,13 @@ class EbayApi extends React.Component {
                 filterItem: "",
                 conditionId: "3000",
                 categoryId: "&categoryId=15724",
-                startDate: moment().add(-10, "days").format("YYYY-MM-DD"),
+                startDate: moment().add(-2, "days").format("YYYY-MM-DD"),
                 endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
                 sellerOne:"",
                 sellerTwo:"",
                 sellerThree:"",
             },
         };
-        //this.sortBy = this.sortBy.bind(this)
     }
 
    
@@ -122,6 +127,7 @@ class EbayApi extends React.Component {
         this.setState({
             loading: false,
             itemList: [],
+            show: false,
             queryParams: {
                 placeholderField: "Search items...",
                 placeholderSellerField: "Search seller...",
@@ -130,7 +136,7 @@ class EbayApi extends React.Component {
                 filterItem: "",
                 conditionId: "3000",
                 categoryId: "",
-                startDate: moment().add(-30, "days").format("YYYY-MM-DD"),
+                startDate: moment().add(-2, "days").format("YYYY-MM-DD"),
                 endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
                 sellerOne:"",
                 sellerTwo:"",
@@ -219,6 +225,12 @@ class EbayApi extends React.Component {
             });
     };
 
+    clickImg = (clickValue) => {
+        this.setState({
+           show: !this.state.show
+        });
+    }
+
     //Metody do tworzenia TableItems
     createTableItems = () => {
         const {loading, itemList, queryParams, categoryList} = this.state;
@@ -262,7 +274,7 @@ class EbayApi extends React.Component {
                 return (
                     <tr key={index+1}>
                             <td>{index+1}</td>
-                            <td className="imgURL" style={{backgroundImage: `url(${item.galleryURL})`}}></td>
+                            <td className="imgURL" style={{ backgroundImage: this.state.show ? `url(${item.galleryURL})` : "none"}}></td>
                             <td className="textToLeft">{item.title}</td>
                             <td>{categoryItems}</td>
                             <td>{ebayCategoryItems}</td>
@@ -377,6 +389,7 @@ class EbayApi extends React.Component {
                         accObject[day].push(item);
                     }
                 /*console.log(accObject);*/
+                
                 return accObject;
             },{})
         );
@@ -414,8 +427,8 @@ class EbayApi extends React.Component {
             
         );
     }
-        
-    
+
+  
     render () {
            
         const {loading} = this.state;     
@@ -441,6 +454,8 @@ class EbayApi extends React.Component {
                         endDate = {this.state.queryParams.endDate}
                         startDataChange = {this.startDataChange}
                         endDataChange = {this.endDataChange}
+                        clickImg = {this.clickImg}
+                        show = {this.state.show}
                     />
                 </div>
                 {(!loading && this.state.itemList.length===0) && 
@@ -477,32 +492,75 @@ class EbayApi extends React.Component {
                         <TableSeller sellerCount={this.sellerCount()}/>
                         <TableWatchers watcherCount={this.watcherCount()}/>
                         <TablePrices watcherCount={this.watcherCount()}/>
-                        
-                        <table className="tableStyle" id="table-to-xls">
+                        <table className="tableStyle" id="table-to-xls" >
                             <TableHeader 
                                 list={this.createTableItems()}
-                                //sortyBy={this.sortBy}
-                                //itemList={this.state.itemList}
                             />
-                            <TableItems list={this.createTableItems()}/>
+                            <TableItems list={this.createTableItems()} id="items-to-xls"/>   
                             <TableFooter 
-                            sum={this.sumAllPrices().toFixed(2)}
-                            sumWithShipping={this.sumAllPricesWithShipping().toFixed(2)}
+                                sum={this.sumAllPrices().toFixed(2)}
+                                sumWithShipping={this.sumAllPricesWithShipping().toFixed(2)}
                             />
-                            <ReactToExcel
+                        </table>
+                        <ReactToExcel
                                 className="btn-export"
                                 table="table-to-xls"
                                 filename="ebayFetchFile"
                                 sheet="sheet 1"
                                 buttonText="EXPORT"
                             />
-                        </table>
+                            <ReactToExcelSeller
+                                className="btn-export-seller"
+                                table="seller-to-xls"
+                                filename="ebayTopSellers"
+                                sheet="sheet 2"
+                                buttonText="EXPORT SELLER"
+                            />
                     </div>}
             </div>
         )
     } 
  
 };
+
+/*class Jquery extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+        componentDidMount = () => {
+        console.log("komponent mount dziala");
+         $('#to-csv').click(function(e) {
+            //alert("tekst");
+            console.log("klik dziala");
+            let tableXsl = $('#table-to-xls').html();
+            console.log(tableXsl);
+            let file = new Blob([tableXsl], {type:'text/csv'});
+
+            let url = URL.createObjectURL(file);
+
+            window.location = url;
+
+            let a = $("<a />", {
+                href: url,
+                download: "ebayStat.csv"
+            })
+            .appendTo("body")
+            .get(0)
+            .click();
+                e.preventDefault();
+       });    
+    }
+    
+      
+    render () {
+        console.log("render dziala");
+        return (
+            <div>
+                <input type="button" id="to-csv" value="to excel" />
+            </div>    
+        )
+    }
+}*/
 
 
 const App = () => (
