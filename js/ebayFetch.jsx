@@ -6,6 +6,7 @@ import ReactToExcel from 'react-html-table-to-excel';
 import ReactToExcelSeller from 'react-html-table-to-excel';
 import { renderToStaticMarkup } from 'react-dom/server'
 import $  from 'jquery';
+import PropTypes from 'prop-types';
 //import BootstrapTable from 'react-bootstrap-table-next';
 //import ToolkitProvider, { CSVExport } from 'react-bootstrap-table2-toolkit';
 //const { ExportCSVButton } = CSVExport;
@@ -49,7 +50,7 @@ function prepareUrl(params) {
     return `http://svcs.ebay.com/services/search/FindingService/v1
     ?OPERATION-NAME=findCompletedItems
     &SERVICE-VERSION=1.0.0
-    &SECURITY-APPNAME=MichalKr-Test-PRD-e5d80d3bd-41bbd681
+    &SECURITY-APPNAME=
     &GLOBAL-ID=EBAY-DE
     &RESPONSE-DATA-FORMAT=JSON
     &callback=_cb_findCompletedItems
@@ -59,9 +60,9 @@ function prepareUrl(params) {
     &itemFilter(0).name=Condition
     &itemFilter(0).value=${params.conditionId}
     &itemFilter(1).name=EndTimeFrom
-    &itemFilter(1).value=${params.startDate}T23:00:01.000Z
+    &itemFilter(1).value=${params.startDate}T00:01:01.000Z
     &itemFilter(2).name=EndTimeTo
-    &itemFilter(2).value=${params.endDate}T22:59:01.000Z
+    &itemFilter(2).value=${params.endDate}T23:59:01.000Z
     &itemFilter(3).name=SoldItemsOnly
     &itemFilter(3).value=true
     &itemFilter(4).name=LocatedIn
@@ -74,6 +75,115 @@ function prepareUrl(params) {
     &outputSelector(0)=SellerInfo`.replace(/ /g,'');       
 }
 
+const propTypes = {
+    table: PropTypes.string.isRequired,
+    filename: PropTypes.string.isRequired,
+    sheet: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    className: PropTypes.string,
+    buttonText: PropTypes.string,
+  };
+  
+  const defaultProps = {
+    id: 'button-download-as-xls',
+    className: 'button-download',
+    buttonText: 'Download',
+  };
+
+
+  class ReactHTMLTableToExcel extends React.Component {
+    constructor(props) {
+      super(props);
+      this.handleDownload = this.handleDownload.bind(this);
+    }
+  
+    static base64(s) {
+      return window.btoa(unescape(encodeURIComponent(s)));
+    }
+  
+    static format(s, c) {
+      return s.replace(/{(\w+)}/g, (m, p) => c[p]);
+    }
+  
+    handleDownload() {
+      if (!document) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Failed to access document object');
+        }
+  
+        return null;
+      }
+  
+      if (document.getElementById(this.props.table).nodeType !== 1 || document.getElementById(this.props.table).nodeName !== 'TABLE') {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Provided table property is not html table element');
+        }
+  
+        return null;
+      }
+  
+      const table = document.getElementById(this.props.table).outerHTML;
+      const sheet = String(this.props.sheet);
+      const filename = `${String(this.props.filename)}.xls`;
+  
+      const uri = 'data:application/vnd.ms-excel;base64,';
+      const template =
+        '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-mic' +
+        'rosoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta cha' +
+        'rset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:Exce' +
+        'lWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' +
+        '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></' +
+        'xml><![endif]--></head><body>{table}</body></html>';
+  
+      const context = {
+        worksheet: sheet || 'Worksheet',
+        table,
+      };
+  
+      // If IE11
+      if (window.navigator.msSaveOrOpenBlob) {
+        const fileData = [
+          `${'<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-mic' + 'rosoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta cha' + 'rset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:Exce' + 'lWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' + '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></' + 'xml><![endif]--></head><body>'}${table}</body></html>`,
+        ];
+        const blobObject = new Blob(fileData);
+        document.getElementById('react-html-table-to-excel').click()(() => {
+          window.navigator.msSaveOrOpenBlob(blobObject, filename);
+        });
+  
+        return true;
+      }
+  
+      const element = window.document.createElement('a');
+      element.href =
+        uri +
+        ReactHTMLTableToExcel.base64(
+          ReactHTMLTableToExcel.format(template, context),
+        );
+      element.download = filename;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+  
+      return true;
+    }
+  
+    render() {
+      return (
+        <button
+          id={this.props.id}
+          className={this.props.className}
+          type="button"
+          onLoad={this.handleDownload}
+        >
+          {this.props.buttonText}
+        </button>
+      );
+    }
+  }
+  
+  ReactHTMLTableToExcel.propTypes = propTypes;
+  ReactHTMLTableToExcel.defaultProps = defaultProps;
+
 
 
 class EbayApi extends React.Component {
@@ -82,6 +192,8 @@ class EbayApi extends React.Component {
         this.state = {
             loading: false,
             show: false,
+            timeout: null,
+            isClickable: false,
             itemList: [],
             categoryList: [],
             queryParams: {
@@ -89,18 +201,23 @@ class EbayApi extends React.Component {
                 placeholderSellerField: "Search seller...",
                 pageNumber: 1,
                 totalPages: 100,
-                filterItem: "",
+                filterItem: "fred perry",
                 conditionId: "3000",
-                categoryId: "&categoryId=15724",
-                startDate: moment().add(-2, "days").format("YYYY-MM-DD"),
-                endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
+                categoryId: "",
+                startDate: moment("2018-12-01").format("YYYY-MM-DD"),
+                endDate: moment("2018-12-01").format("YYYY-MM-DD"),
                 sellerOne:"",
                 sellerTwo:"",
                 sellerThree:"",
+
             },
         };
     }
 
+    /*
+        startDate: moment().add(-2, "days").format("YYYY-MM-DD"),
+        endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
+    */ 
    
     // Metody dla komponentu InputWithURL
     searchItem = (filterItem) => {
@@ -124,26 +241,38 @@ class EbayApi extends React.Component {
     }
 
     resetSearch = () => {
+        const {timeout} = this.state;
+        clearTimeout(timeout);
+        console.log("reset");
         this.setState({
             loading: false,
             itemList: [],
             show: false,
+            timeout: setTimeout(() => {this.tasker()}, 3000),
+            isClickable: false,
             queryParams: {
+                ...this.state.queryParams,
                 placeholderField: "Search items...",
                 placeholderSellerField: "Search seller...",
                 pageNumber: 1,
                 totalPages: 100,
-                filterItem: "",
+                filterItem: "fred perry",
                 conditionId: "3000",
                 categoryId: "",
-                startDate: moment().add(-2, "days").format("YYYY-MM-DD"),
-                endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
+                startDate: moment(this.state.queryParams.startDate).add(1, 'days').format("YYYY-MM-DD"),
+                endDate: moment(this.state.queryParams.endDate).add(1, 'days').format("YYYY-MM-DD"),
                 sellerOne:"",
                 sellerTwo:"",
                 sellerThree:"",
             },
-        }); 
+        });
     }
+
+
+    /*
+    startDate: moment().add(-2, "days").format("YYYY-MM-DD"),
+    endDate: moment().add(-1, "days").format("YYYY-MM-DD"),
+    */ 
 
     changeCondition = (conditionValue) => {
         this.setState({
@@ -167,21 +296,73 @@ class EbayApi extends React.Component {
         this.setState({
           queryParams: {
             ...this.state.queryParams,
-            startDate: date.format("YYYY-MM-DD"),
+            startDate: moment("2018-12-01").format("YYYY-MM-DD"),
           }  
         });
     }
+
+    //startDate: date.format("YYYY-MM-DD"),
 
     endDataChange = (date) => {
         this.setState({
           queryParams: {
             ...this.state.queryParams,
-            endDate: date.format("YYYY-MM-DD"),
+            endDate: moment("2018-12-01").format("YYYY-MM-DD"),
           }  
         });
     }
 
-    
+    //endDate: date.format("YYYY-MM-DD"),
+
+/////TASKER
+
+    taskerClick() {
+        this.tasker();
+    }
+
+    tasker = () => {
+        let interval;
+        const {timeout} = this.state;
+        clearTimeout(timeout);
+        this.setState(({
+            timeout: interval = setTimeout(() => {this.taskExport()}, 20000),
+            queryParams: {
+                ...this.state.queryParams,
+                startDate: this.state.queryParams.startDate,
+                endDate: this.state.queryParams.endDate,
+            }
+        }));
+        if((moment(this.state.queryParams.endDate).isAfter("2018-12-31", "day"))){
+            clearTimeout(interval);
+            console.log("konczymy!");
+        }else{
+            this.fetchItemsTask();
+        }
+        
+        console.log("tasker");
+        console.log(moment(this.state.queryParams.startDate).format("YYYY-MM-DD"));
+        
+        
+    }
+    //(moment(this.state.queryParams.endDate).isSame("2018-10-31", "day"))
+
+    taskExport = (e) => {
+        console.log("export");
+        const {timeout} = this.state;
+        clearTimeout(timeout);
+        this.setState(({
+            timeout: setTimeout(() => {this.resetSearch()}, 10000),
+            queryParams: {
+                ...this.state.queryParams,
+            }
+        }));
+        this.refs.child.handleDownload(); 
+    }
+
+
+
+
+  ////////  
 
     // Main Fetch
     fetchItems = () => {
@@ -198,6 +379,7 @@ class EbayApi extends React.Component {
                 //const categories = data.categoryHistogramContainer[0].categoryHistogram;
                 const totalPages = Number(data.paginationOutput[0].totalPages[0]);
                 console.log(moment(this.state.queryParams.startDate._d).format("YYYY-DD-MM"));
+                console.log("pierwszy fetch");
                 if (this.state.queryParams.pageNumber<totalPages) {
                     this.setState({
                         itemList: [...this.state.itemList, ...items],
@@ -225,6 +407,46 @@ class EbayApi extends React.Component {
             });
     };
 
+    //Tasker Fetch
+
+    fetchItemsTask = () => {
+        this.setState({
+            loading: true,
+        });
+        fetch(prepareUrl(this.state.queryParams))
+            .then(resp => resp.text())
+            // Response w formacie text, przygotowanie pod JSON.parse
+            .then(data => JSON.parse(data.slice(57).slice(0, -2))[0])
+            .then(data => {
+                // Dane artykulow w items, dane do kategorii w categories, dane do paginacji w totalPages
+                const items = data.searchResult[0].item;
+                const totalPages = Number(data.paginationOutput[0].totalPages[0]);
+                console.log("drugi fetch");
+                if (this.state.queryParams.pageNumber<totalPages) {
+                    this.setState({
+                        itemList: [...this.state.itemList, ...items],
+                        queryParams: {
+                            ...this.state.queryParams,
+                            pageNumber: this.state.queryParams.pageNumber + 1,
+                            totalPages: totalPages,
+                        },
+                    }, () => this.fetchItemsTask());
+                } else {
+                    this.setState({
+                        loading: false,
+                        itemList: [...this.state.itemList, ...items],
+                        //pageNumber: 1,
+                    });
+                };
+            })
+            .catch(() => {
+                this.setState({
+                    loading: false,
+                    title: "Error"
+                });
+            });
+    };
+
     clickImg = (clickValue) => {
         this.setState({
            show: !this.state.show
@@ -234,7 +456,8 @@ class EbayApi extends React.Component {
     //Metody do tworzenia TableItems
     createTableItems = () => {
         const {loading, itemList, queryParams, categoryList} = this.state;
-
+        let keyword = this.state.queryParams.filterItem;
+                
         return(
             itemList.map((item, index) => {
             
@@ -269,13 +492,15 @@ class EbayApi extends React.Component {
                 } else {
                     ebayCategoryItems = "Irrelevant";
                 }
+
+                
     
             
                 return (
                     <tr key={index+1}>
-                            <td>{index+1}</td>
-                            <td className="imgURL" style={{ backgroundImage: this.state.show ? `url(${item.galleryURL})` : "none"}}></td>
+                            
                             <td className="textToLeft">{item.title}</td>
+                            <td>{keyword}</td>
                             <td>{categoryItems}</td>
                             <td>{ebayCategoryItems}</td>
                             <td>{(Number(item.listingInfo[0].watchCount).toFixed(0)) >= 0 ? (Number(item.listingInfo[0].watchCount)) : 0}</td>
@@ -286,7 +511,8 @@ class EbayApi extends React.Component {
                             <td>{item.listingInfo[0].listingType=="FixedPrice" ? "Fixed" : "Bid"}</td>
                             <td>{moment(item.listingInfo[0].endTime, moment.ISO_8601).format("MM-DD-YYYY")}</td>
                             <td>{item.sellerInfo[0].sellerUserName}</td>
-                            <td><a href={"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + item.itemId} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
+                            <td>{item.itemId}</td>
+                            <td className="hide"><a href={"https://www.ebay.de/sch/i.html?_from=R40&_sacat=0&LH_Complete=1&_nkw=" + item.itemId} target="_blank"><i className="fas fa-external-link-alt"></i></a></td>
                     </tr>
                     )}
                 )
@@ -456,6 +682,8 @@ class EbayApi extends React.Component {
                         endDataChange = {this.endDataChange}
                         clickImg = {this.clickImg}
                         show = {this.state.show}
+                        isClickable = {this.state.isClickable}
+                        taskerClick = {this.tasker}
                     />
                 </div>
                 {(!loading && this.state.itemList.length===0) && 
@@ -493,36 +721,31 @@ class EbayApi extends React.Component {
                         <TableWatchers watcherCount={this.watcherCount()}/>
                         <TablePrices watcherCount={this.watcherCount()}/>
                         <table className="tableStyle" id="table-to-xls" >
-                            <TableHeader 
-                                list={this.createTableItems()}
-                            />
                             <TableItems list={this.createTableItems()} id="items-to-xls"/>   
-                            <TableFooter 
-                                sum={this.sumAllPrices().toFixed(2)}
-                                sumWithShipping={this.sumAllPricesWithShipping().toFixed(2)}
-                            />
                         </table>
-                        <ReactToExcel
+                        <ReactHTMLTableToExcel
                                 className="btn-export"
                                 table="table-to-xls"
                                 filename="ebayFetchFile"
                                 sheet="sheet 1"
                                 buttonText="EXPORT"
-                            />
-                            <ReactToExcelSeller
-                                className="btn-export-seller"
-                                table="seller-to-xls"
-                                filename="ebayTopSellers"
-                                sheet="sheet 2"
-                                buttonText="EXPORT SELLER"
-                            />
+                                ref="child"
+                        />
+                        <ReactToExcelSeller
+                            className="btn-export-seller"
+                            table="seller-to-xls"
+                            filename="ebayTopSellers"
+                            sheet="sheet 2"
+                            buttonText="EXPORT SELLER"
+                        />
+                        
                     </div>}
             </div>
         )
     } 
  
 };
-
+//ReactHTMLTableToExcel
 /*class Jquery extends React.Component{
     constructor(props) {
         super(props);
@@ -560,7 +783,31 @@ class EbayApi extends React.Component {
             </div>    
         )
     }
-}*/
+}
+// usuniete rzeczy dla sql
+
+<td className="hide">{index+1}</td>
+<td className="imgURL hide" style={{ backgroundImage: this.state.show ? `url(${item.galleryURL})` : "none"}}></td>
+
+<TableHeader list={this.createTableItems()} className="hide" />
+
+<TableFooter 
+    sum={this.sumAllPrices().toFixed(2)}
+    sumWithShipping={this.sumAllPricesWithShipping().toFixed(2)}
+    className="hide"
+/>
+
+
+<ReactToExcel
+                                className="btn-export"
+                                table="table-to-xls"
+                                filename="ebayFetchFile"
+                                sheet="sheet 1"
+                                buttonText="EXPORT"
+                                ref={this.simulateClick}
+                        />
+*/
+
 
 
 const App = () => (

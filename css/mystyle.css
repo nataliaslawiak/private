@@ -119,13 +119,13 @@
     color: white;
 }
 
-.buttonStyle:hover, .resetButton:hover {
+.buttonStyle:hover, .resetButton:hover, .taskerButton:hover {
     cursor: pointer;
     background-color: #d4c3f1;
     transition: all .2s linear;
 }
 
-.buttonStyle:focus, .resetButton:focus {
+.buttonStyle:focus, .resetButton:focus, .taskerButton:focus {
     outline: none;
 }
 
@@ -143,6 +143,21 @@
     font-weight: 700;
     color: white;
     background-color: #9681bb
+}
+
+.taskerButton{
+    position: relative;
+    top: 20%;
+    left: 24%;
+    border-radius: 5px;
+    width: 80px;
+    height: 30px;
+    border: 0;
+    text-transform: uppercase;
+    font-size: 16px;
+    color: white;
+    background-color: #9681bb;
+    font-weight: 400;
 }
 
 
@@ -438,6 +453,9 @@ tr:nth-child(even) {
     padding: 10px;
     margin: 10px;
 }
+
+
+
 
 @media only screen and (max-width: 1600px) {
     .btn-export {

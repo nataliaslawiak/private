@@ -24,6 +24,14 @@ class InputWithURL extends React.Component {
         } 
     }
 
+    handleTasker = () => {
+        if (typeof this.props.fetchItems === "function") {
+            this.props.taskerClick();
+        } 
+    }
+
+    
+
     handleClickImg = (clickValue) => {
         if (typeof this.props.clickImg === "function") {
             this.props.clickImg(clickValue);
@@ -60,6 +68,7 @@ class InputWithURL extends React.Component {
                     </datalist>
                 <button className="buttonStyle" onClick={e => this.handleClick(e)}><i className="fas fa-search"></i></button>
                 <button className="resetButton" onClick={e => this.handleClickReset(e)}><i className="fas fa-undo"></i></button>
+                <button className="taskerButton" onClick={e => this.handleTasker(e)}>TASKER</button>
                 <div className="extraParam">
                     <div className="conditionParam">
                         <label>

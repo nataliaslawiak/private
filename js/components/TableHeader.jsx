@@ -12,6 +12,7 @@ class TableHeader extends React.Component {
                     <th>Lp.</th>
                     <th>Foto</th>
                     <th>Tytuł</th>
+                    <th>Keyword</th>
                     <th>Kategoria</th>
                     <th>Kategoria eBay</th>
                     <th>Obserwujących</th>
@@ -22,6 +23,7 @@ class TableHeader extends React.Component {
                     <th>Typ</th>
                     <th>Data</th>
                     <th>Sprzedawca</th>
+                    <th>Artikelnummer</th>
                     <th>Link</th>
                 </tr>
             </thead>
